@@ -33,3 +33,24 @@
 
 # en mac
 - ./node_modules/.bin/tslint --init 
+
+```
+# tslint.json
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "no-console": false
+    },
+    "rulesDirectory": []
+}
+```
+
+- npm i -s express cors dotenv
+- npm i --save-dev @types/express
+
+# Repositorio fernando
+https://github.com/Klerith/curso-node-restserver
