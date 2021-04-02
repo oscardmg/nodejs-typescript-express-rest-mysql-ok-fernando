@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+import db from '../db/connection';
 import userRoutes from '../routes/usuario';
 import cors from 'cors';
 
@@ -18,6 +19,7 @@ class Server {
 
         
         // Metodos iniciales
+        this.dbConnection();
         this.middleware();
         this.routes();
     }
@@ -39,6 +41,16 @@ class Server {
         // lectura del body
         this.app.use(express.json());
         //carpeta publica
+    }
+
+    async dbConnection() {
+        try {
+            await db.authenticate();
+            console.log('database online!');
+            
+        } catch (error) {
+            throw new Error(error)
+        }
     }
 
 }

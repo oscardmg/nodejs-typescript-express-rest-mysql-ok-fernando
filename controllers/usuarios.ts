@@ -1,51 +1,97 @@
 import { Request, Response } from "express";
+import Usuario from "../models/usuario";
 
 
-export const getUsuarios = (req: Request, res: Response) => {
-    res.json({
-        msg: 'getUsuarios'
-    });
+export const getUsuarios = async (req: Request, res: Response) => {
+    
+    const usuarios = await Usuario.findAll();
+    
+    res.json( { usuarios });
 }
 
-export const getUsuario = (req: Request, res: Response) => {
+export const getUsuario = async (req: Request, res: Response) => {
     
     const { id } = req.params;
-    
-    res.json({
-        msg: 'getUsuario',
-        id
-    });
+
+    const usuario = await Usuario.findByPk(id);
+    if(usuario != null) {
+        res.json(usuario);
+    }else {
+        res.status(404).json({
+            msg: `No existe usuario con id ${id} `
+        });
+    }
 }
 
-export const postUsuario = (req: Request, res: Response) => {
+export const postUsuario = async (req: Request, res: Response) => {
     
     const { body } = req;
     
-    res.json({
-        msg: 'postUsuarios',
-        body
-    });
+    try {
+        
+        const existe = await Usuario.findOne({
+            where: {
+                email: body.email
+            }
+        });
+
+        if(existe != null) {
+            throw new Error(`El usuario con email: ${body.email} ya existe`);
+        }
+        
+        
+        const usuario = Usuario.build(body);
+        await usuario.save();
+        res.json(usuario);
+    } catch (error) {
+        res.status(400).json({
+            msg: `ocurrio un problema ${error.message}`
+        });
+    }
+    
 }
 
-export const putUsuario = (req: Request, res: Response) => {
+export const putUsuario = async (req: Request, res: Response) => {
     
     const { id } = req.params;
     const { body } = req;
     
-    res.json({
-        msg: 'putUsuario',
-        body,
-        id
-    });
+    try {
+        
+        const usuario = await Usuario.findByPk(id);
+        console.log('usuario:', usuario);
+        
+        if(!usuario) {
+            throw new Error(`El usuario con id: ${id} no existe`);
+        }
+        
+        await Usuario.update(body);
+        
+        res.json(usuario);
+    } catch (error) {
+        res.status(400).json({
+            msg: `ocurrio un problema ${error.message} id: ${id}`
+        });
+    }
+    
 }
 
-export const deleteUsuario = (req: Request, res: Response) => {
+export const deleteUsuario = async(req: Request, res: Response) => {
     
     const { id } = req.params;
     
-    res.json({
-        msg: 'deleteUsuario',
-        id
-    });
+    
+    const usuario = await Usuario.findByPk(id);
+    if(usuario != null) {
+        // ojo borra la tabla await Usuario.drop(usuario);
+        await usuario.destroy();
+        res.json({
+            msg: 'se borro con exito'
+        });
+    }else {
+        res.status(404).json({
+            msg: `No existe usuario con id ${id} `
+        });
+    }
 }
 
