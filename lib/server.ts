@@ -43,6 +43,10 @@ class Server {
       throw new Error(error);
     }
   }
+
+  getApp() {
+    return this.app;
+  }
 }
 
 export default Server;
