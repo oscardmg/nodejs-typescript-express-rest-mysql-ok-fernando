@@ -1,0 +1,22 @@
+GET http://localhost:3000/api/users/v1 
+
+###
+GET http://localhost:3000/api/users/v1/123 
+
+###
+POST http://localhost:3000/api/users/v1
+Content-Type: : application/json
+
+{
+  "name": "Oscar",
+  "email": "oscar@gmail.com",
+  "status": "true"
+}
+
+###
+PUT http://localhost:3000/api/users/v1/125 
+
+###
+DELETE http://localhost:3000/api/users/v1/125 
+
+
